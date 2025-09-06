@@ -100,33 +100,6 @@
       </div>
     </section>
 
-    <!-- FAQ Section -->
-    <section class="faq-section">
-      <div class="container">
-        <div class="section-header">
-          <h2>Frequently Asked Questions</h2>
-          <p>Quick answers to common questions</p>
-        </div>
-        
-        <div class="faq-list">
-          <div 
-            class="faq-item" 
-            v-for="(faq, index) in faqs" 
-            :key="index"
-            :class="{ 'active': activeFaq === index }"
-          >
-            <div class="faq-question" @click="toggleFaq(index)">
-              <h3>{{ faq.question }}</h3>
-              <span class="faq-toggle">{{ activeFaq === index ? '−' : '+' }}</span>
-            </div>
-            <div class="faq-answer" v-show="activeFaq === index">
-              <p>{{ faq.answer }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
      <!-- Success Modal -->
     <div v-if="showSuccessModal" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
@@ -143,14 +116,17 @@
         </div>
       </div>
     </div>
-
   </div>
+  <FaqSection />
 </template>
 
 <script>
 import { ref, reactive, onMounted } from 'vue'
+import FaqSection from '@/components/FaqSection.vue'
 
 export default {
+  name: 'Contact',
+  components: { FaqSection },
 
    setup() {
       const form = reactive({
@@ -168,34 +144,6 @@ export default {
       const errors = reactive({})
       const isSubmitting = ref(false)
       const showSuccessModal = ref(false)
-      const activeFaq = ref(null)
-
-      const faqs = ref([
-      {
-        question: 'What types of payment are supported?',
-        answer: 'All major credit cards, PayPal, and a bank transfer using Plaid'
-      },
-      {
-        question: 'Are there processing fees?',
-        answer: 'Your donation will include the option to cover any processing fees, depending on the form of payment.'
-      },
-      {
-        question: 'Is this tax-deductible?',
-        answer: "George Strait Recognition is a 501(c)3 organization registered in all 50 states. Contributions are deductible to the extent allowed by law. International donations may not be tax-deductible. International donors should check with their tax advisors to determine whether their donations are deductible under their jurisdiction's tax law. Please consult your tax advisor to see how this may apply to you. a bank transfer using Plaid"
-      },
-      {
-        question: 'Where does my money actually go?',
-        answer: 'We offer 24/7 live chat support, email support, phone support for enterprise customers, and a comprehensive knowledge base with tutorials and best practices.'
-      },
-      {
-        question: 'What if my donation exceeds $5,000?',
-        answer: 'For donations that exceed $5,000 USD, please reach out to us at {donation@gmail.com} for guidance!'
-      },
-      {
-        question: 'What kind of support do you provide?',
-        answer: 'We offer 24/7 live chat support, email support, phone support for enterprise customers, and a comprehensive knowledge base with tutorials and best practices.'
-      }
-    ])
 
     const validateForm = () => {
       const newErrors = {}
@@ -260,10 +208,6 @@ export default {
       showSuccessModal.value = false
     }
 
-    const toggleFaq = (index) => {
-      activeFaq.value = activeFaq.value === index ? null : index
-    }
-
     onMounted(() => {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
@@ -273,7 +217,7 @@ export default {
         })
       })
 
-      document.querySelectorAll('.contact-method, .faq-item').forEach(el => {
+      document.querySelectorAll('.contact-method').forEach(el => {
         observer.observe(el)
       })
     })
@@ -283,11 +227,8 @@ export default {
       errors,
       isSubmitting,
       showSuccessModal,
-      activeFaq,
-      faqs,
       submitForm,
       closeModal,
-      toggleFaq
     }
    }
 
